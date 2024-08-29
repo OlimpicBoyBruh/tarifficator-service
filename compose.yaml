@@ -1,0 +1,19 @@
+name: credit-bank-service
+
+services:
+
+  db-service:
+    image: postgres:13.8-alpine
+    container_name: "tarifficator-db"
+    restart: always
+    environment:
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    ports:
+      - 5432:5432
+
+include:
+  - path: profile-service/compose.yaml
+
+

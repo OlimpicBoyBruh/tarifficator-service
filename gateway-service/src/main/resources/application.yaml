@@ -1,0 +1,28 @@
+server:
+  port: 8295
+
+springdoc:
+  swagger-ui:
+    path: "/swagger"
+    disable-swagger-default-url: true
+    use-root-path: true
+
+integration:
+  service:
+    tariff:
+      base-url: http://localhost:8095/tariff
+      method:
+        create: /create
+        delete: /delete/{tariffId}
+        update: /update/{tariffId}
+
+    product:
+      base-url: http://localhost:8195/product
+      method:
+        create: /create
+        delete: /delete/{productId}
+        get-actual-version: /{productId}
+        get-previous-version-all: /previous-version/all/{productId}
+        get-previous-version: /previous-version
+        put-rollback-version: /update/rollback-version/{productId}
+

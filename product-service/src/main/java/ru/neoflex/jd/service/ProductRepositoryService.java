@@ -27,14 +27,15 @@ public class ProductRepositoryService {
             tariffClient.saveTariff(tariffMapper.toDto(productDto.getTariff()));
         }
         productRepository.save(productMapping.toEntity(productDto));
-        log.info("Product saved: {}", productDto);
+        log.info("Product saved");
 
     }
 
-    public void deleteProductById(UUID id) {
+    public ProductDto deleteProductById(UUID id) {
         log.info("Deleting product with id: {}", id);
-        productRepository.deleteById(id);
-        log.info("Product deleted with id: {}", id);
+        ProductDto productDto = productMapping.toDto(productRepository.getReferenceById(id));
+        log.info("Product deleted product {}", productDto);
+        return productDto;
     }
 
     public void updateProduct(ProductDto productDto) {
@@ -53,17 +54,19 @@ public class ProductRepositoryService {
     public void rollbackVersionProduct(UUID id) {
         log.info("Rollback version product with id: {}", id);
         productRepository.save(productMapping.toEntity(auditService.getPreviousRevisionProduct(id)));
-        log.info("Product successfully rollbacked: {}", id);
+        log.info("Product successfully rollbacked");
     }
 
     public void saveProduct(Product product) {
         log.info("Invoke saveProduct with product: {}", product);
         productRepository.save(product);
-        log.info("Save product successfully: {}", product);
+        log.info("Save product successfully");
     }
 
     public Product getProductByIdNotDto(UUID id) {
-        log.info("Invoke getProductById with id: {}", id);
-        return productRepository.findById(id).orElseThrow();
+        log.info("Invoke getProductByIdNotDto with id: {}", id);
+        Product product = productRepository.findById(id).orElseThrow();
+        log.info("Returned product: {}", product);
+        return product;
     }
 }

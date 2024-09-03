@@ -35,10 +35,11 @@ public class ProductController {
     }
 
     @DeleteMapping("/delete/{productId}")
-    public void deleteProduct(@PathVariable("productId") String productId) {
+    public ProductDto deleteProduct(@PathVariable("productId") String productId) {
         log.info("Delete product: {}", productId);
-        productRepositoryService.deleteProductById(UUID.fromString(productId));
+       ProductDto productDto =  productRepositoryService.deleteProductById(UUID.fromString(productId));
         log.info("Product deleted");
+        return productDto;
     }
 
     @GetMapping("/{productId}")

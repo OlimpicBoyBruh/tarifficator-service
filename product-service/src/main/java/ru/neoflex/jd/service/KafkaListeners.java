@@ -19,10 +19,12 @@ public class KafkaListeners {
     @Transactional
     @KafkaListener(topics = "product-tariff", groupId = "tarifficatorGroup")
     public void saveTariff(TariffDto tariffDto) {
+        log.info("Received tariff: {}", tariffDto);
         try {
             Product product = productRepositoryService.getProductByIdNotDto(tariffDto.getProductId());
             product.setTariff(tariffMapper.toEntity(tariffDto));
             productRepositoryService.saveProduct(product);
+            log.info("Product saved: {}", product);
         } catch (Exception e) {
             log.error("Error while saving tariff", e);
         }

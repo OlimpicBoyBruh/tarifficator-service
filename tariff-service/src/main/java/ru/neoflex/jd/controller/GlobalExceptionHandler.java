@@ -42,7 +42,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorMessage> UnexpectedException(Exception exception) {
+    public ResponseEntity<ErrorMessage> unexpectedException(Exception exception) {
         return ResponseEntity
                 .status(520)
                 .body(new ErrorMessage(exception.getMessage()));

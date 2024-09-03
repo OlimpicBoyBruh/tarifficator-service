@@ -15,5 +15,6 @@ public class KafkaSender {
     public void send(TariffDto tariffDto) {
         log.info("Sending message to Kafka: {}", tariffDto);
         kafkaTemplate.send("product-tariff", tariffDto);
+        log.info("Message successfully sent to Kafka");
     }
 }

@@ -12,7 +12,6 @@ import org.springframework.kafka.support.serializer.JsonSerializer;
 import ru.neoflex.jd.dto.TariffDto;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 @Configuration
 public class KafkaProducerConfig {

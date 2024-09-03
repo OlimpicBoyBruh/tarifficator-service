@@ -8,6 +8,11 @@ springdoc:
     use-root-path: true
 
 spring:
+  kafka:
+    consumer:
+      auto-offset-reset: earliest
+      group-id: "dealGroup"
+    bootstrap-servers: localhost:29092
   datasource:
     url: jdbc:postgresql://localhost:5432/tarifficator-db
     username: ${DB_USER}
@@ -17,4 +22,20 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: validate
+      default_schema: "${app.schema}"
+  liquibase:
+    default-schema: "${app.schema}"
+    change-log: db/changelog/changelog-master.xml
+preliquibase:
+  enabled: true
+
+app:
+  schema: "product_service"
+
+integration:
+  service:
+    tariff:
+      base-url: http://localhost:8095/tariff
+      method:
+        save-tariff: /integration/save

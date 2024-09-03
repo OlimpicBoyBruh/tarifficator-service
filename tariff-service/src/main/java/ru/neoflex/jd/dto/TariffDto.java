@@ -1,7 +1,6 @@
 package ru.neoflex.jd.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import java.time.LocalDateTime;
@@ -9,6 +8,7 @@ import java.util.UUID;
 
 @Data
 public class TariffDto {
+    private UUID id;
     @Schema(description = "Название тарифа", defaultValue = "Giga")
     private String name;
     private LocalDateTime startDate;

@@ -35,6 +35,7 @@ public class TariffRepositoryService {
         log.info("Saving update tariff: {}", tariff);
         tariffRepository.save(tariff);
         log.info("Tariff successfully updated");
+        kafkaSender.send(tariffDto);
     }
 
     public TariffDto deleteTariff(UUID tariffId) {
@@ -45,11 +46,10 @@ public class TariffRepositoryService {
         return tariffDto;
     }
 
-    public TariffDto getTariff(UUID tariffId) {
-        log.info("Getting tariff with id: {}", tariffId);
-        TariffDto tariffDto = tariffMapper.toDto(tariffRepository.findById(tariffId).orElseThrow());
-        log.info("Tariff successfully got {}", tariffDto);
-        return tariffDto;
+    public void saveTariff(TariffDto tariffDto) {
+        log.info("Saving tariff: {}", tariffDto);
+        Tariff tariff = tariffMapper.toEntity(tariffDto);
+        tariffRepository.save(tariff);
+        log.info("Tariff successfully saved");
     }
-
 }

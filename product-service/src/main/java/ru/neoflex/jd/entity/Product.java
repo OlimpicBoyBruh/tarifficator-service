@@ -8,6 +8,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import lombok.Data;
 import org.hibernate.annotations.Type;
+import org.hibernate.envers.AuditTable;
 import org.hibernate.envers.Audited;
 import ru.neoflex.jd.dto.enumerated.ProductType;
 import java.time.LocalDateTime;

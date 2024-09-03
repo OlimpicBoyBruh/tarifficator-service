@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="v1-1" author="Meshcheriakov Artem">
+        <createSequence sequenceName="revinfo_seq" startValue="1" incrementBy="50"/>
+    </changeSet>
+
+    <changeSet id="v1-2" author="Meshcheriakov Artem">
+        <createTable tableName="revinfo" schemaName="tariff_service">
+            <column name="rev" type="bigint">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="revtstmp" type="bigint"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="v1-3" author="Meshcheriakov Artem">
+        <createTable tableName="tariff_aud" schemaName="tariff_service">
+            <column name="rate" type="float(53)"/>
+            <column name="revtype" type="smallint"/>
+            <column name="end_date" type="timestamp(6)"/>
+            <column name="rev" type="bigint">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="start_date" type="timestamp(6)"/>
+            <column name="id" type="uuid">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="product_id" type="uuid"/>
+            <column name="description" type="varchar(255)"/>
+            <column name="name" type="varchar(255)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="v1-4" author="Meshcheriakov Artem">
+        <addForeignKeyConstraint
+                baseTableName="tariff_aud"
+                baseColumnNames="rev"
+                referencedTableName="revinfo"
+                referencedColumnNames="rev"
+                constraintName="fg_tariff_aud_revinfo"/>
+    </changeSet>
+</databaseChangeLog>

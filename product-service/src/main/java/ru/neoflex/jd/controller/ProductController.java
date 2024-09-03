@@ -32,7 +32,6 @@ public class ProductController {
         log.info("Create product: {}", productDto);
         productRepositoryService.createProduct(productDto);
         log.info("Product created");
-
     }
 
     @DeleteMapping("/delete/{productId}")
@@ -55,9 +54,9 @@ public class ProductController {
     }
 
     @GetMapping("/previous-version")
-    public List<ProductDto> getPreviousVersion(@RequestParam("productId") String productId, @RequestParam("period")LocalDate period) {
+    public List<ProductDto> getPreviousVersion(@RequestParam("productId") String productId, @RequestParam("period") LocalDate period) {
         log.info("Get previous version product: {}", productId);
-        return auditService.getVersionProductForPeriod(UUID.fromString(productId),period);
+        return auditService.getVersionProductForPeriod(UUID.fromString(productId), period);
 
     }
 

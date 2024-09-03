@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -42,10 +41,12 @@ public class TariffController {
         tariffRepositoryService.updateTariff(UUID.fromString(tariffId), tariffDto);
 
     }
-    /*@GetMapping("/get/{tariffId}")
-    public TariffDto getTariff(@PathVariable("tariffId") String tariffId) {
-        log.info("Get Tariff: {}", tariffId);
-        return tariffRepositoryService.getTariff(UUID.fromString(tariffId));
-    }*/
+
+    @PostMapping("/integration/save")
+    public void saveTariff(@RequestBody TariffDto tariffDto) {
+        log.info("Integration Request save Tariff: {}", tariffDto);
+        tariffRepositoryService.saveTariff(tariffDto);
+    }
+
 
 }

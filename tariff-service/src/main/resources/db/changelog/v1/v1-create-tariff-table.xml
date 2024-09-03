@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+
+    <changeSet id="v1-1" author="Meshcheriakov Artem">
+        <createTable tableName="tariff" schemaName="tariff_service">
+            <column name="rate" type="float(53)"/>
+            <column name="end_date" type="timestamp(6)"/>
+            <column name="start_date" type="timestamp(6)"/>
+            <column name="id" type="uuid">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="product_id" type="uuid"/>
+            <column name="description" type="varchar(255)"/>
+            <column name="name" type="varchar(255)"/>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

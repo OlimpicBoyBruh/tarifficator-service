@@ -21,4 +21,15 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: validate
+
+  liquibase:
+    enabled: true
+    default-schema: "${app.schema}"
+    change-log: db/changelog/changelog-master.xml
+preliquibase:
+
+  enabled: true
+
+app:
+  schema: "tariff_service"

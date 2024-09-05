@@ -26,7 +26,7 @@ public class TariffController {
     @PostMapping("/create")
     public void createTariff(@RequestBody @Valid TariffDto tariffDto) {
         log.info("Creation Request Tariff: {}", tariffDto);
-        tariffRepositoryService.saveTariffAndSendMessage(tariffDto);
+        tariffRepositoryService.saveTariffAndUpdateProduct(tariffDto);
     }
 
     @DeleteMapping("/delete/{tariffId}")
@@ -35,10 +35,10 @@ public class TariffController {
         return tariffRepositoryService.deleteTariff(UUID.fromString(tariffId));
     }
 
-    @PutMapping("/update/{tariffId}")
-    public void updateTariff(@PathVariable("tariffId") String tariffId, @RequestBody @Valid TariffDto tariffDto) {
-        log.info("Update Tariff: {}", tariffId);
-        tariffRepositoryService.updateTariff(UUID.fromString(tariffId), tariffDto);
+    @PutMapping("/update")
+    public void updateTariff(@RequestBody @Valid TariffDto tariffDto) {
+        log.info("Update Tariff: {}", tariffDto.getId());
+        tariffRepositoryService.updateTariff(tariffDto);
 
     }
 
@@ -47,6 +47,5 @@ public class TariffController {
         log.info("Integration Request save Tariff: {}", tariffDto);
         tariffRepositoryService.saveTariff(tariffDto);
     }
-
 
 }

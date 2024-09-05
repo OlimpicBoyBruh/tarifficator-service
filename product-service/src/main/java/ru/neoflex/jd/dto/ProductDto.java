@@ -1,15 +1,14 @@
 package ru.neoflex.jd.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
 import lombok.Value;
 import ru.neoflex.jd.dto.enumerated.ProductType;
-import ru.neoflex.jd.entity.Tariff;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@NotNull
 @Value
+@Builder
 public class ProductDto {
     @Schema(description = "ID", defaultValue = "3fa85f64-5717-4562-b3fc-2c963f66afa5")
     private UUID id;
@@ -24,7 +23,7 @@ public class ProductDto {
     @Schema(description = "Дата окончания действия продукта", defaultValue = "2039-01-01T00:00:00")
     private LocalDateTime endDate;
     @Schema(description = "Тариф")
-    private Tariff tariff;
+    private TariffDto tariff;
     @Schema(description = "Автор", defaultValue = "3fa85f64-5717-4562-b3fc-2c963f66afa6")
     private UUID author;
 }

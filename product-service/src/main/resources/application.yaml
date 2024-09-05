@@ -8,11 +8,6 @@ springdoc:
     use-root-path: true
 
 spring:
-  kafka:
-    consumer:
-      auto-offset-reset: earliest
-      group-id: "dealGroup"
-    bootstrap-servers: localhost:29092
   datasource:
     url: jdbc:postgresql://localhost:5432/tarifficator-db
     username: ${DB_USER}
@@ -36,6 +31,7 @@ app:
 integration:
   service:
     tariff:
-      base-url: http://localhost:8095/tariff
+      base-url: http://localhost:8095
       method:
-        save-tariff: /integration/save
+        delete-tariff: /tariff/delete/{tariffId}
+        save-tariff: /tariff/integration/save

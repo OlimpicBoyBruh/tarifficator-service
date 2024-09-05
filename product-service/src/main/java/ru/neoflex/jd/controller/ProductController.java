@@ -1,5 +1,8 @@
 package ru.neoflex.jd.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.neoflex.jd.dto.ProductAudDto;
 import ru.neoflex.jd.dto.ProductDto;
+import ru.neoflex.jd.dto.TariffDto;
 import ru.neoflex.jd.service.AuditService;
 import ru.neoflex.jd.service.ProductRepositoryService;
 import java.time.LocalDate;
@@ -23,22 +27,30 @@ import java.util.UUID;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/product")
+@Tag(name = "Product service", description = "Сервис для создания/управления/удаления продуктов.")
 public class ProductController {
     private final AuditService auditService;
     private final ProductRepositoryService productRepositoryService;
 
+    @Operation(summary = "Создание продукта.",
+            description = "Поступает запрос в формате JSON, десериализация  в ProductDto, после происходит запрос" +
+                    " на добавление в БД, если уже заполнено поле Tariff, отправляется запрос на добавление в сервис Tariff")
+
     @PostMapping("/create")
-    public void createProduct(@RequestBody ProductDto productDto) {
+    public void createProduct(@RequestBody @Valid ProductDto productDto) {
         log.info("Create product: {}", productDto);
         productRepositoryService.createProduct(productDto);
         log.info("Product created");
     }
 
+    @Operation(summary = "Удаление продукта.",
+            description = "Поступает запрос в формате JSON, десериализация  в ProductDto, после происходит удаление из БД")
     @DeleteMapping("/delete/{productId}")
-    public void deleteProduct(@PathVariable("productId") String productId) {
+    public ProductDto deleteProduct(@PathVariable("productId") String productId) {
         log.info("Delete product: {}", productId);
-        productRepositoryService.deleteProductById(UUID.fromString(productId));
+        ProductDto productDto = productRepositoryService.deleteProductById(UUID.fromString(productId));
         log.info("Product deleted");
+        return productDto;
     }
 
     @GetMapping("/{productId}")
@@ -54,7 +66,8 @@ public class ProductController {
     }
 
     @GetMapping("/previous-version")
-    public List<ProductDto> getPreviousVersion(@RequestParam("productId") String productId, @RequestParam("period") LocalDate period) {
+    public List<ProductDto> getPreviousVersionForPeriod(@RequestParam("productId") String productId,
+                                                        @RequestParam("period") LocalDate period) {
         log.info("Get previous version product: {}", productId);
         return auditService.getVersionProductForPeriod(UUID.fromString(productId), period);
 
@@ -65,6 +78,13 @@ public class ProductController {
         log.info("Rollback previous version product: {}", productId);
         productRepositoryService.rollbackVersionProduct(UUID.fromString(productId));
         log.info("Version rolled back");
+    }
+
+    @PutMapping("/update-tariff")
+    public void updateTariff(@RequestBody @Valid TariffDto tariffDto) {
+        log.info("Invoke updateTariff: {}", tariffDto);
+        productRepositoryService.updateTariff(tariffDto);
+        log.info("Tariff updated");
     }
 
 }

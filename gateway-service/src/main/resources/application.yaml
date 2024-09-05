@@ -10,19 +10,19 @@ springdoc:
 integration:
   service:
     tariff:
-      base-url: http://localhost:8095/tariff
+      base-url: http://localhost:8095
       method:
-        create: /create
-        delete: /delete/{tariffId}
-        update: /update/{tariffId}
+        create: /tariff/create
+        delete: /tariff/delete/{tariffId}
+        update: /tariff/update/{tariffId}
 
     product:
-      base-url: http://localhost:8195/product
+      base-url: http://localhost:8195
       method:
-        create: /create
-        delete: /delete/{productId}
-        get-actual-version: /{productId}
-        get-previous-version-all: /previous-version/all/{productId}
-        get-previous-version: /previous-version
-        put-rollback-version: /update/rollback-version/{productId}
+        create: /product/create
+        delete: /product/delete/{productId}
+        get-actual-version: /product/{productId}
+        get-previous-version-all: /product/previous-version/all/{productId}
+        get-previous-version: /product/previous-version
+        put-rollback-version: /product/update/rollback-version/{productId}
 

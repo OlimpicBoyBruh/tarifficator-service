@@ -68,7 +68,8 @@ public class GatewayController {
     }
 
     @GetMapping("/product/previous-version")
-    public List<ProductDto> getPreviousVersion(@RequestParam("productId") String productId, @RequestParam("period") LocalDate period) {
+    public List<ProductDto> getPreviousVersion(@RequestParam("productId") String productId,
+                                               @RequestParam("period") LocalDate period) {
         log.info("Invoke getPreviousVersion method with productId: {}, period: {}", productId, period);
         return gatewayService.getPreviousVersion(productId, period);
     }

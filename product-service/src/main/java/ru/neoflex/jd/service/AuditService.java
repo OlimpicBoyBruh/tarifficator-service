@@ -43,6 +43,9 @@ public class AuditService {
                 })
                 .filter(Objects::nonNull)
                 .toList();
+        if (result.isEmpty()) {
+            throw new IllegalArgumentException("Нет версий продукта");
+        }
         log.info("Found products, returning {}", result);
         return result;
     }
@@ -52,7 +55,7 @@ public class AuditService {
         AuditReader reader = AuditReaderFactory.get(entityManager);
         List<Number> revisions = reader.getRevisions(Product.class, productId);
         if (revisions.size() < 2) {
-            throw new IllegalArgumentException("No previous revision");
+            throw new IllegalArgumentException("Нет других версий продукта");
         }
         Number revision = revisions.get(revisions.size() - 2);
         Product product = reader.find(Product.class, productId, revision);
@@ -70,7 +73,7 @@ public class AuditService {
                 .filter(product -> product.getStartDate() != null && LocalDate.from(product.getStartDate()).equals(period))
                 .toList();
         if (productsForPeriod.isEmpty()) {
-            throw new IllegalArgumentException("No product found for the specified period");
+            throw new IllegalArgumentException("Нет продуктов за указанный период");
         }
         log.info("Found {} products, returning {}", productsForPeriod.size(), productsForPeriod);
         return productsForPeriod.stream().map(productAudMapper::toDto).toList();

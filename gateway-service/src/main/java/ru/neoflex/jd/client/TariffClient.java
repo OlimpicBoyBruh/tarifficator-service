@@ -14,7 +14,7 @@ public interface TariffClient {
     @PostMapping("${integration.service.tariff.method.create}")
     void createTariff(@RequestBody @Valid TariffDto tariffDto);
 
-    @DeleteMapping("/delete/{tariffId}")
+    @DeleteMapping("${integration.service.tariff.method.delete}")
     TariffDto deleteTariff(@PathVariable("tariffId") String tariffId);
 
     @PutMapping("${integration.service.tariff.method.update}")

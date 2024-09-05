@@ -1,0 +1,17 @@
+services:
+
+  product-service:
+    build: .
+    container_name: "product-service"
+    image: "product-service"
+    depends_on:
+      - db-service
+    networks:
+      - backend-tarifficator
+    environment:
+      - SPRING_DATASOURCE_URL=${DB_URL}
+      - SPRING_DATASOURCE_USERNAME=${DB_USER}
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
+      - INTEGRATION_SERVICE_TARIFF_BASE_URL=${INTEGRATION_SERVICE_TARIFF_BASE_URL}
+    ports:
+      - 8195:8195

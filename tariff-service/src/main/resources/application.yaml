@@ -8,10 +8,6 @@ springdoc:
     use-root-path: true
 
 spring:
-  kafka:
-    consumer:
-      group-id: "tarifficatorGroup"
-    bootstrap-servers: localhost:29092
   datasource:
     url: jdbc:postgresql://localhost:5432/tarifficator-db
     username: ${DB_USER}
@@ -27,9 +23,17 @@ spring:
     enabled: true
     default-schema: "${app.schema}"
     change-log: db/changelog/changelog-master.xml
-preliquibase:
 
+preliquibase:
   enabled: true
+
+integration:
+  service:
+    product:
+      method:
+        update-tariff: /product/update-tariff
+      base-url: http://localhost:8195
+
 
 app:
   schema: "tariff_service"

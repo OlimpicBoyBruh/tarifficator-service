@@ -3,8 +3,8 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
 
-
     <changeSet id="v1-1" author="Artem Meshcheryakov">
+
         <createTable tableName="profile" schemaName="profile_service">
             <column name="id" type="uuid">
                 <constraints primaryKey="true" nullable="false"/>
@@ -24,5 +24,16 @@
         <rollback>
             <dropTable tableName="profile"/>
         </rollback>
+    </changeSet>
+
+    <changeSet id="v1-2" author="Artem Meshcheriakov">
+        <addColumn tableName="profile" schemaName="profile_service">
+            <column name="username" type="varchar(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="password" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
     </changeSet>
 </databaseChangeLog>

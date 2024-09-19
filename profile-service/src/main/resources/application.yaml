@@ -17,11 +17,35 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: validate
+      default_schema: "${app.schema}"
   liquibase:
     default-schema: "${app.schema}"
     change-log: db/changelog/changelog-master.xml
-preliquibase:
-  enabled: true
-
 app:
   schema: "profile_service"
+#Дополнительные правила для проверки необходимо описать ниже
+x-source:
+  rules-validate:
+    mail:
+      - firstName
+      - email
+    mobile:
+      - phoneNumber
+    bank:
+      - bankId
+      - firstName
+      - lastName
+      - middleName
+      - birthDate
+      - passportNumber
+    gosuslugi:
+      - id
+      - bankId
+      - lastName
+      - firstName
+      - middleName
+      - dateOfBirth
+      - passportNumber
+      - birthPlace
+      - phoneNumber
+      - registrationAddress

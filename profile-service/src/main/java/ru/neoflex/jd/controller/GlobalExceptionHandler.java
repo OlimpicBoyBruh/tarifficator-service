@@ -23,6 +23,12 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorMessage(exception.getMessage()));
     }
 
+    @ExceptionHandler(NoSuchFieldException.class)
+    public ResponseEntity<ErrorMessage> noSuchFieldHandler(NoSuchFieldException exception) {
+        log.error("Exception noSuchFieldHandler: {}", exception.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorMessage(exception.getMessage()));
+    }
+
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ErrorMessage> illegalArgumentHandler(IllegalArgumentException exception) {
         log.error("Exception illegalArgumentHandler: {}", exception.getMessage());
@@ -56,8 +62,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorMessage> unexpectedException(Exception exception) {
-        log.error("Exception UnexpectedException: {}", exception.getMessage());
+    public ResponseEntity<ErrorMessage> UnexpectedException(Exception exception) {
         return ResponseEntity
                 .status(520)
                 .body(new ErrorMessage(exception.getMessage()));

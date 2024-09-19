@@ -31,4 +31,6 @@ public class Profile {
     private String email;
     private String registrationAddress;
     private String residenceAddress;
+    private String username;
+    private String password;
 }

@@ -1,48 +1,42 @@
 package ru.neoflex.jd.valid;
 
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Validation;
-import jakarta.validation.Validator;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
+import ru.neoflex.jd.configuration.AppValidRulesProperties;
 import ru.neoflex.jd.dto.ProfileDto;
-import ru.neoflex.jd.dto.enumerated.Application;
-import java.util.Set;
+import java.lang.reflect.Field;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Slf4j
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@Component
+@RequiredArgsConstructor
 public class ValidateProfileDto {
-    private static final Validator VALIDATOR = Validation.buildDefaultValidatorFactory().getValidator();
+    private final AppValidRulesProperties appValidRulesProperties;
 
-    public static void validate(ProfileDto profileDto, Application applicationName) {
-        log.info("Start validation process");
-        Set<ConstraintViolation<ProfileDto>> violations = switch (applicationName) {
-            case MOBILE -> {
-                log.info("Invoke mobile validation");
-                yield VALIDATOR.validate(profileDto, Validate.MobileGroup.class);
-            }
-            case GOSUSLUGI -> {
-                log.info("Invoke gosuslugi validation");
-                yield VALIDATOR.validate(profileDto, Validate.GosUslugiGroup.class);
-            }
-            case MAIL -> {
-                log.info("Invoke mail validation");
-                yield VALIDATOR.validate(profileDto, Validate.MailGroup.class);
-            }
-            case BANK -> {
-                log.info("Invoke bank validation");
-                yield VALIDATOR.validate(profileDto, Validate.BankGroup.class);
-            }
-        };
+    public void validate(ProfileDto profileDto, String applicationName) {
+        Map<String, List<String>> rules = appValidRulesProperties.getRulesValidate();
 
-        if (!violations.isEmpty()) {
-            StringBuilder sb = new StringBuilder("Validation failed: ");
-            for (ConstraintViolation<ProfileDto> violation : violations) {
-                sb.append(violation.getMessage()).append(". ");
+        List<String> applicationRules = Optional.ofNullable(rules.get(applicationName))
+                .orElseThrow(() -> new IllegalArgumentException("No rules found for application: " + applicationName));
+
+        applicationRules.forEach(value -> compareVariableName(value, profileDto));
+    }
+
+    private void compareVariableName(String variableName, ProfileDto profileDto) {
+        try {
+            Field field = profileDto.getClass().getDeclaredField(variableName);
+            field.setAccessible(true);
+            if (field.get(profileDto) == null) {
+                throw new IllegalArgumentException("Validation failed: " + variableName);
+
             }
-            throw new IllegalArgumentException(sb.toString());
+        } catch (NoSuchFieldException exception) {
+            throw new IllegalArgumentException("Field not found: " + variableName);
+        } catch (IllegalAccessException exception) {
+            throw new IllegalArgumentException("Access denied for field: " + variableName);
         }
-        log.info("Validation process finished");
     }
 }

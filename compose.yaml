@@ -4,7 +4,7 @@ services:
 
   db-service:
     image: postgres:13.8-alpine
-    container_name: "tarifficator-db"
+    container_name: "db-tarifficator"
     restart: always
     networks:
       - backend-tarifficator
@@ -15,52 +15,12 @@ services:
     ports:
       - 5432:5432
 
-  zookeeper:
-    image: confluentinc/cp-zookeeper:7.4.4
-    environment:
-      ZOOKEEPER_CLIENT_PORT: 2181
-      ZOOKEEPER_TICK_TIME: 2000
-    networks:
-      - backend-tarifficator
-    ports:
-      - 22181:22181
-
-  kafka:
-    image: confluentinc/cp-kafka:latest
-    depends_on:
-      - zookeeper
-    networks:
-      - backend-tarifficator
-    ports:
-      - 29092:29092
-    environment:
-      KAFKA_BROKER_ID: 1
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
-      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-  kafka-ui:
-    image: provectuslabs/kafka-ui:v0.7.2
-    restart: "no"
-    ports:
-      - "8989:8080"
-    environment:
-      DYNAMIC_CONFIG_ENABLED: "true"
-      KAFKA_CLUSTERS_0_NAME: zookeeper_cluster
-      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
-    healthcheck:
-      test: wget --no-verbose --tries=1 --spider http://localhost:8080/actuator/health || exit -1
-      interval: 10s
-      timeout: 5s
-      start_period: 60s
-      retries: 5
-
 include:
   - path: tariff-service/compose.yaml
   - path: product-service/compose.yaml
   - path: gateway-service/compose.yaml
   - path: profile-service/compose.yaml
+  - path: auth-service/compose.yaml
 
 networks:
   backend-tarifficator:

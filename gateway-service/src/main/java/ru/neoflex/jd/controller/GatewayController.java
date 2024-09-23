@@ -1,82 +1,57 @@
 package ru.neoflex.jd.controller;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import io.swagger.v3.oas.annotations.Parameter;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import ru.neoflex.jd.dto.ProductAudDto;
 import ru.neoflex.jd.dto.ProductDto;
 import ru.neoflex.jd.dto.TariffDto;
-import ru.neoflex.jd.service.GatewayService;
 import java.time.LocalDate;
 import java.util.List;
-
-@Slf4j
-@RestController
-@RequiredArgsConstructor
 @RequestMapping("/tarifficator")
-public class GatewayController {
-    private final GatewayService gatewayService;
-
+public interface GatewayController {
     @GetMapping("/product/actual/{productId}")
-    public ProductDto getActualProduct(@PathVariable("productId") String productId) {
-        log.info("Invoke getActualProduct method with productId: {}", productId);
-        return gatewayService.getActualProduct(productId);
-    }
+    ProductDto getActualProduct(@PathVariable("productId") String productId,
+                                @Parameter(hidden = true) @RequestHeader("Authorization") String token);
+
 
     @PostMapping("/product/create")
-    public void createProduct(@RequestBody ProductDto productDto) {
-        log.info("Invoke createProduct method with productDto: {}", productDto);
-        gatewayService.createProduct(productDto);
-    }
+    void createProduct(@RequestBody ProductDto productDto,
+                       @Parameter(hidden = true) @RequestHeader("Authorization") String token);
 
     @DeleteMapping("/product/delete/{productId}")
-    public ProductDto deleteProduct(@PathVariable("productId") String productId) {
-        log.info("Invoke deleteProduct method with productId: {}", productId);
-        return gatewayService.deleteProduct(productId);
-    }
+    ProductDto deleteProduct(@PathVariable("productId") String productId,
+                             @Parameter(hidden = true) @RequestHeader("Authorization") String token);
 
     @GetMapping("/product/versions/{productId}")
-    public List<ProductAudDto> getProductVersions(@PathVariable("productId") String productId) {
-        log.info("Invoke getProductVersions method with productId: {}", productId);
-        return gatewayService.getProductVersions(productId);
-    }
+    List<ProductAudDto> getProductVersions(@PathVariable("productId") String productId,
+                                           @Parameter(hidden = true) @RequestHeader("Authorization") String token);
 
     @PostMapping("/tariff/create")
-    public void createTariff(@RequestBody TariffDto tariffDto) {
-        log.info("Invoke createTariff method with tariffDto: {}", tariffDto);
-        gatewayService.createTariff(tariffDto);
-    }
+    void createTariff(@RequestBody TariffDto tariffDto,
+                      @Parameter(hidden = true) @RequestHeader("Authorization") String token);
 
     @DeleteMapping("/tariff/delete/{tariffId}")
-    public TariffDto deleteTariff(@PathVariable("tariffId") String tariffId) {
-        log.info("Invoke deleteTariff method with tariffId: {}", tariffId);
-        return gatewayService.deleteTariff(tariffId);
-    }
+    TariffDto deleteTariff(@PathVariable("tariffId") String tariffId,
+                           @Parameter(hidden = true) @RequestHeader("Authorization") String token);
 
     @PutMapping("/tariff/update/{tariffId}")
-    public void updateTariff(@PathVariable("tariffId") String tariffId, @RequestBody TariffDto tariffDto) {
-        log.info("Invoke updateTariff method with tariffDto: {}", tariffDto);
-        gatewayService.updateTariff(tariffId, tariffDto);
-    }
+    void updateTariff(@PathVariable("tariffId") String tariffId, @RequestBody TariffDto tariffDto,
+                      @Parameter(hidden = true) @RequestHeader("Authorization") String token);
 
     @GetMapping("/product/previous-version")
-    public List<ProductDto> getPreviousVersion(@RequestParam("productId") String productId,
-                                               @RequestParam("period") LocalDate period) {
-        log.info("Invoke getPreviousVersion method with productId: {}, period: {}", productId, period);
-        return gatewayService.getPreviousVersion(productId, period);
-    }
+    List<ProductDto> getPreviousVersion(@RequestParam("productId") String productId,
+                                        @RequestParam("period") LocalDate period,
+                                        @Parameter(hidden = true) @RequestHeader("Authorization") String token);
 
     @PutMapping("/product/rollback-version/{productId}")
-    public void rollbackVersion(@PathVariable("productId") String productId) {
-        log.info("Invoke rollbackVersion method productId: {}", productId);
-        gatewayService.rollbackVersion(productId);
-    }
+    void rollbackVersion(@PathVariable("productId") String productId,
+                         @Parameter(hidden = true) @RequestHeader("Authorization") String token);
 }

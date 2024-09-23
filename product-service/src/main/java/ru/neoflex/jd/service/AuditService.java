@@ -7,9 +7,11 @@ import org.hibernate.envers.AuditReader;
 import org.hibernate.envers.AuditReaderFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.neoflex.jd.client.AuthService;
 import ru.neoflex.jd.dto.ProductAudDto;
 import ru.neoflex.jd.dto.ProductDto;
 import ru.neoflex.jd.entity.Product;
+import ru.neoflex.jd.exception.NotAccessException;
 import ru.neoflex.jd.mapping.ProductAudMapper;
 import java.time.LocalDate;
 import java.util.List;
@@ -25,29 +27,33 @@ public class AuditService {
 
     private final EntityManager entityManager;
     private final ProductAudMapper productAudMapper;
+    private final AuthService authService;
 
-    public List<ProductAudDto> getAllRevisionProduct(UUID productId) {
-        log.info("Getting all revision,By productId:{}", productId);
-        AuditReader reader = AuditReaderFactory.get(entityManager);
-        List<Number> revisions = reader.getRevisions(Product.class, productId);
+    public List<ProductAudDto> getAllRevisionProduct(UUID productId, String token) {
+        if (Boolean.TRUE.equals(authService.validateToken(token))) {
+            log.info("Getting all revision,By productId:{}", productId);
+            AuditReader reader = AuditReaderFactory.get(entityManager);
+            List<Number> revisions = reader.getRevisions(Product.class, productId);
 
-        List<ProductAudDto> result = IntStream.range(0, revisions.size())
-                .mapToObj(i -> {
-                    Number revision = revisions.get(i);
-                    Product product = reader.find(Product.class, productId, revision);
-                    ProductAudDto dto = productAudMapper.toAudDto(product);
-                    if (dto != null) {
-                        dto.setVersion((long) (i + 1));
-                    }
-                    return dto;
-                })
-                .filter(Objects::nonNull)
-                .toList();
-        if (result.isEmpty()) {
-            throw new IllegalArgumentException("Нет версий продукта");
+            List<ProductAudDto> result = IntStream.range(0, revisions.size())
+                    .mapToObj(i -> {
+                        Number revision = revisions.get(i);
+                        Product product = reader.find(Product.class, productId, revision);
+                        ProductAudDto dto = productAudMapper.toAudDto(product);
+                        if (dto != null) {
+                            dto.setVersion((long) (i + 1));
+                        }
+                        return dto;
+                    })
+                    .filter(Objects::nonNull)
+                    .toList();
+            if (result.isEmpty()) {
+                throw new IllegalArgumentException("Нет версий продукта");
+            }
+            log.info("Found products, returning {}", result);
+            return result;
         }
-        log.info("Found products, returning {}", result);
-        return result;
+        throw new NotAccessException("Токен неверный");
     }
 
     public ProductDto getPreviousRevisionProduct(UUID productId) {
@@ -61,23 +67,25 @@ public class AuditService {
         Product product = reader.find(Product.class, productId, revision);
         log.info("Found product, returning {}", product);
         return productAudMapper.toDto(product);
+
     }
 
-    public List<ProductDto> getVersionProductForPeriod(UUID productId, LocalDate period) {
-        log.info("Getting products for period {},By productId:{}", period, productId);
-        AuditReader reader = AuditReaderFactory.get(entityManager);
-        List<Number> revisions = reader.getRevisions(Product.class, productId);
-        List<Product> productsForPeriod = revisions.stream()
-                .map(revision -> reader.find(Product.class, productId, revision))
-                .filter(Objects::nonNull)
-                .filter(product -> product.getStartDate() != null && LocalDate.from(product.getStartDate()).equals(period))
-                .toList();
-        if (productsForPeriod.isEmpty()) {
-            throw new IllegalArgumentException("Нет продуктов за указанный период");
+    public List<ProductDto> getVersionProductForPeriod(UUID productId, LocalDate period, String token) {
+        if (Boolean.TRUE.equals(authService.validateToken(token))) {
+            log.info("Getting products for period {},By productId:{}", period, productId);
+            AuditReader reader = AuditReaderFactory.get(entityManager);
+            List<Number> revisions = reader.getRevisions(Product.class, productId);
+            List<Product> productsForPeriod = revisions.stream()
+                    .map(revision -> reader.find(Product.class, productId, revision))
+                    .filter(Objects::nonNull)
+                    .filter(product -> product.getStartDate() != null && LocalDate.from(product.getStartDate()).equals(period))
+                    .toList();
+            if (productsForPeriod.isEmpty()) {
+                throw new IllegalArgumentException("Нет продуктов за указанный период");
+            }
+            log.info("Found {} products, returning {}", productsForPeriod.size(), productsForPeriod);
+            return productsForPeriod.stream().map(productAudMapper::toDto).toList();
         }
-        log.info("Found {} products, returning {}", productsForPeriod.size(), productsForPeriod);
-        return productsForPeriod.stream().map(productAudMapper::toDto).toList();
+        throw new NotAccessException("Токен неверный");
     }
-
-
 }

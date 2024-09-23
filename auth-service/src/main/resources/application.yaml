@@ -1,0 +1,16 @@
+server:
+  port: 8080
+
+integration:
+  service:
+    profile:
+      method:
+        get-user-info: /profile/user-info/{username}
+      base-url: http://localhost:8085
+
+
+springdoc:
+  swagger-ui:
+    path: "/swagger"
+    disable-swagger-default-url: true
+    use-root-path: true

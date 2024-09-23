@@ -1,5 +1,6 @@
 package ru.neoflex.jd.controller;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.api.ErrorMessage;
 import org.springframework.http.HttpStatus;
@@ -17,10 +18,18 @@ import java.util.NoSuchElementException;
 @Slf4j
 @ControllerAdvice
 public class GlobalExceptionHandler {
+
+
     @ExceptionHandler(NoSuchElementException.class)
     public ResponseEntity<ErrorMessage> noSuchElementHandler(NoSuchElementException exception) {
         log.error("Exception noSuchElementHandler: {}", exception.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorMessage(exception.getMessage()));
+    }
+
+    @ExceptionHandler(NoSuchFieldException.class)
+    public ResponseEntity<ErrorMessage> noSuchFieldHandler(NoSuchFieldException exception) {
+        log.error("Exception noSuchFieldHandler: {}", exception.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorMessage(exception.getMessage()));
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
@@ -55,9 +64,14 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorMessage(exception.getMessage()));
     }
 
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<ErrorMessage> entityNotFoundExceptionHandler(EntityNotFoundException exception) {
+        log.error("Exception entityNotFoundExceptionHandler: {}", exception.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorMessage(exception.getMessage()));
+    }
+
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorMessage> unexpectedException(Exception exception) {
-        log.error("Exception UnexpectedException: {}", exception.getMessage());
+    public ResponseEntity<ErrorMessage> UnexpectedException(Exception exception) {
         return ResponseEntity
                 .status(520)
                 .body(new ErrorMessage(exception.getMessage()));

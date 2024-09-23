@@ -35,3 +35,7 @@ integration:
       method:
         delete-tariff: /tariff/delete/{tariffId}
         save-tariff: /tariff/integration/save
+    auth:
+      base-url: http://localhost:8080
+      method:
+        valid: /auth/verify

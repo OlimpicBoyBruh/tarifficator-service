@@ -7,8 +7,6 @@ springdoc:
     disable-swagger-default-url: true
     use-root-path: true
 spring:
-  security:
-
   datasource:
     url: jdbc:postgresql://localhost:5432/tarifficator-db
     username: ${DB_USER}

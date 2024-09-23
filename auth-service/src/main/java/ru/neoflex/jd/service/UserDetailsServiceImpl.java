@@ -24,7 +24,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             userInfoDto = profileClient.getUserInfo(username);
             log.info("User found success {}", userInfoDto.getUsername());
         } catch (FeignException exception) {
-            log.error("Error fetching user info for username: {}", exception);
             throw new UsernameNotFoundException("Error fetching user info for username: " + username);
         }
 

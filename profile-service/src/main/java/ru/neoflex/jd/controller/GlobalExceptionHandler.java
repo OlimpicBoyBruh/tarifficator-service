@@ -1,5 +1,6 @@
 package ru.neoflex.jd.controller;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.api.ErrorMessage;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,8 @@ import java.util.NoSuchElementException;
 @Slf4j
 @ControllerAdvice
 public class GlobalExceptionHandler {
+
+
     @ExceptionHandler(NoSuchElementException.class)
     public ResponseEntity<ErrorMessage> noSuchElementHandler(NoSuchElementException exception) {
         log.error("Exception noSuchElementHandler: {}", exception.getMessage());
@@ -59,6 +62,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorMessage> missingRequestHeaderHandler(MissingRequestHeaderException exception) {
         log.error("Exception missingRequestHeaderHandler: {}", exception.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorMessage(exception.getMessage()));
+    }
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<ErrorMessage> entityNotFoundExceptionHandler(EntityNotFoundException exception) {
+        log.error("Exception entityNotFoundExceptionHandler: {}", exception.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorMessage(exception.getMessage()));
     }
 
     @ExceptionHandler(Exception.class)

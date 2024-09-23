@@ -6,6 +6,7 @@ import org.springdoc.api.ErrorMessage;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
@@ -17,6 +18,13 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorMessage> feignExceptionHandler(FeignException exception) {
         log.error("Exception feignExceptionHandler: {}", exception.getMessage());
         return ResponseEntity.status(exception.status()).body(new ErrorMessage(exception.getMessage()));
+    }
+
+    @ExceptionHandler(MissingRequestHeaderException.class)
+    public ResponseEntity<ErrorMessage> missingRequestHeaderHandler(MissingRequestHeaderException exception) {
+        log.error("Exception missingRequestHeaderHandler: Отсутствует header '" + exception.getHeaderName() + "'");
+        return ResponseEntity.status(exception.getStatusCode()).body(new ErrorMessage("Отсутствует header " +
+                exception.getHeaderName() + "'"));
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)

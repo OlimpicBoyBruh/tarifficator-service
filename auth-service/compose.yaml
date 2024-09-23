@@ -1,0 +1,15 @@
+services:
+
+  auth-service:
+    build: .
+    container_name: "auth-service"
+    image: "auth-service"
+    depends_on:
+      - db-service
+    networks:
+      - backend-tarifficator
+    environment:
+      - INTEGRATION_SERVICE_PROFILE_BASE_URL=${INTEGRATION_SERVICE_PROFILE_BASE_URL}
+
+    ports:
+      - 8080:8080

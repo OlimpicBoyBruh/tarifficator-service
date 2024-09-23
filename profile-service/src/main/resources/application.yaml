@@ -7,6 +7,8 @@ springdoc:
     disable-swagger-default-url: true
     use-root-path: true
 spring:
+  security:
+
   datasource:
     url: jdbc:postgresql://localhost:5432/tarifficator-db
     username: ${DB_USER}
@@ -21,6 +23,8 @@ spring:
   liquibase:
     default-schema: "${app.schema}"
     change-log: db/changelog/changelog-master.xml
+
+
 app:
   schema: "profile_service"
 #Дополнительные правила для проверки необходимо описать ниже

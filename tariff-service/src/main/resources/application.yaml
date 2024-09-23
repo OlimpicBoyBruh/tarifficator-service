@@ -33,7 +33,10 @@ integration:
       method:
         update-tariff: /product/update-tariff
       base-url: http://localhost:8195
-
+    auth:
+      base-url: http://localhost:8080
+      method:
+        valid: /auth/verify
 
 app:
   schema: "tariff_service"

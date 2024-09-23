@@ -15,7 +15,7 @@ import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.neoflex.jd.GatewayApp;
-import ru.neoflex.jd.controller.GatewayController;
+import ru.neoflex.jd.controller.GatewayControllerImpl;
 import ru.neoflex.jd.dto.ProductAudDto;
 import ru.neoflex.jd.dto.ProductDto;
 import ru.neoflex.jd.dto.TariffDto;
@@ -37,7 +37,7 @@ public abstract class AbstractSpringContextTest {
     MockMvc mockMvc;
 
     @Autowired
-    GatewayController gatewayController;
+    GatewayControllerImpl gatewayControllerImpl;
 
     @RegisterExtension
     static WireMockExtension wireMockExtension = WireMockExtension.newInstance()

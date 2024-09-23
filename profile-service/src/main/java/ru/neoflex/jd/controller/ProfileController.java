@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.neoflex.jd.dto.ProfileDto;
+import ru.neoflex.jd.dto.UserInfoDto;
 import ru.neoflex.jd.service.ProfileRepositoryService;
 import java.util.List;
 import java.util.UUID;
@@ -62,5 +63,13 @@ public class ProfileController {
         List<ProfileDto> profileDtoList = profileRepositoryService.searchProfile(profileDto);
         log.info("Method searchProfile return find profileDtoList: {}", profileDtoList);
         return profileDtoList;
+    }
+
+    @GetMapping("/user-info/{username}")
+    public UserInfoDto getUserInfo(@PathVariable("username") String username) {
+        log.info("Invoke getUserInfo method. username: {}", username);
+        UserInfoDto userInfoDto = profileRepositoryService.getUserInfo(username);
+        log.info("Method getUserInfo return userInfoDto: {}", userInfoDto);
+        return userInfoDto;
     }
 }

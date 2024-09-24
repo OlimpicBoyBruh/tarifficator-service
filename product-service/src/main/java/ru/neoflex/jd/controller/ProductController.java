@@ -3,6 +3,7 @@ package ru.neoflex.jd.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,7 +37,7 @@ public class ProductController implements ProductControllerSwagger {
         productRepositoryService.createProduct(productDto, token);
         log.info("Product created");
     }
-
+    @DeleteMapping("/delete/{productId}")
     public ProductDto deleteProduct(@PathVariable("productId") String productId,
                                     @RequestHeader("Authorization") String token) {
         log.info("Delete product: {}", productId);

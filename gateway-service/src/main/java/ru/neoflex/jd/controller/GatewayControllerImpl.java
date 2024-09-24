@@ -46,9 +46,9 @@ public class GatewayControllerImpl implements GatewayController {
         return gatewayService.deleteTariff(tariffId, token);
     }
 
-    public void updateTariff(String tariffId, TariffDto tariffDto, String token) {
+    public void updateTariff(TariffDto tariffDto, String token) {
         log.info("Invoke updateTariff method with tariffDto: {}", tariffDto);
-        gatewayService.updateTariff(tariffId, tariffDto, token);
+        gatewayService.updateTariff(tariffDto, token);
     }
 
     public List<ProductDto> getPreviousVersion(String productId, LocalDate period, String token) {

@@ -1,5 +1,6 @@
 package ru.neoflex.jd.service;
 
+import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -44,7 +45,11 @@ public class ProductRepositoryService {
             log.info("Deleting product with id: {}", id);
             Product product = productRepository.findById(id).orElseThrow();
             if (product.getTariff() != null) {
-                tariffClient.deleteTariff(product.getTariff().getId().toString(), token);
+                try {
+                    tariffClient.deleteTariff(product.getTariff().getId().toString(), token);
+                } catch (FeignException exception) {
+                    log.error("Ошибка при удалении тарифа: {}", exception.getMessage());
+                }
             }
             productRepository.deleteById(id);
             log.info("Product deleted product {}", product);

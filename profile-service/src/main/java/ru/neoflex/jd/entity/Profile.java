@@ -1,7 +1,12 @@
 package ru.neoflex.jd.entity;
 
+import jakarta.persistence.AttributeOverride;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.PrimaryKeyJoinColumn;
+import jakarta.persistence.SecondaryTable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,6 +19,8 @@ import java.util.UUID;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@SecondaryTable(name = "user_password",
+        pkJoinColumns = @PrimaryKeyJoinColumn(name = "id"))
 public class Profile {
     @Id
     private UUID id;
@@ -29,5 +36,8 @@ public class Profile {
     private String registrationAddress;
     private String residenceAddress;
     private String username;
-    private String password;
+    @Embedded
+    @AttributeOverride(name = "password",
+            column = @Column(name = "password", table = "user_password"))
+    private UserPassword password;
 }

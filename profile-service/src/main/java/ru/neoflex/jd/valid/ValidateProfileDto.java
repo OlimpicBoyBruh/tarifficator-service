@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import ru.neoflex.jd.configuration.AppValidRulesProperties;
-import ru.neoflex.jd.dto.ProfileDto;
+import ru.neoflex.jd.dto.ProfileDtoRequest;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
@@ -16,20 +16,20 @@ import java.util.Optional;
 public class ValidateProfileDto {
     private final AppValidRulesProperties appValidRulesProperties;
 
-    public void validate(ProfileDto profileDto, String applicationName) {
+    public void validate(ProfileDtoRequest profileDtoRequest, String applicationName) {
         Map<String, List<String>> rules = appValidRulesProperties.getRulesValidate();
 
         List<String> applicationRules = Optional.ofNullable(rules.get(applicationName))
                 .orElseThrow(() -> new IllegalArgumentException("No rules found for application: " + applicationName));
 
-        applicationRules.forEach(value -> compareVariableName(value, profileDto));
+        applicationRules.forEach(value -> compareVariableName(value, profileDtoRequest));
     }
 
-    private void compareVariableName(String variableName, ProfileDto profileDto) {
+    private void compareVariableName(String variableName, ProfileDtoRequest profileDtoRequest) {
         try {
-            Field field = profileDto.getClass().getDeclaredField(variableName);
+            Field field = profileDtoRequest.getClass().getDeclaredField(variableName);
             field.setAccessible(true);
-            if (field.get(profileDto) == null) {
+            if (field.get(profileDtoRequest) == null) {
                 throw new IllegalArgumentException("Validation failed: " + variableName);
 
             }

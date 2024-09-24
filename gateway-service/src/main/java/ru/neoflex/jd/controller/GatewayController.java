@@ -42,8 +42,8 @@ public interface GatewayController {
     TariffDto deleteTariff(@PathVariable("tariffId") String tariffId,
                            @Parameter(hidden = true) @RequestHeader("Authorization") String token);
 
-    @PutMapping("/tariff/update/{tariffId}")
-    void updateTariff(@PathVariable("tariffId") String tariffId, @RequestBody TariffDto tariffDto,
+    @PutMapping("/tariff/update/")
+    void updateTariff( @RequestBody TariffDto tariffDto,
                       @Parameter(hidden = true) @RequestHeader("Authorization") String token);
 
     @GetMapping("/product/previous-version")

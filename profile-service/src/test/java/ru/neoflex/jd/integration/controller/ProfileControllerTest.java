@@ -19,7 +19,7 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
-import ru.neoflex.jd.dto.ProfileDto;
+import ru.neoflex.jd.dto.ProfileDtoRequest;
 import ru.neoflex.jd.service.ProfileRepositoryService;
 import java.time.LocalDate;
 import java.util.NoSuchElementException;
@@ -64,20 +64,20 @@ public class ProfileControllerTest {
                         .header("X-Source", "mobile")
                         .content(objectMapper.writeValueAsString(getProfileDto())))
                 .andExpect(status().isOk());
-        ProfileDto profileDto = profileRepositoryService.searchProfile(getProfileDto()).get(0);
+        ProfileDtoRequest profileDtoRequest = profileRepositoryService.searchProfile(getProfileDto()).get(0);
         assertAll(
-                () -> assertNotNull(profileDto.getId()),
-                () -> assertEquals(getProfileDto().getBankId(), profileDto.getBankId()),
-                () -> assertEquals(getProfileDto().getLastName(), profileDto.getLastName()),
-                () -> assertEquals(getProfileDto().getFirstName(), profileDto.getFirstName()),
-                () -> assertEquals(getProfileDto().getMiddleName(), profileDto.getMiddleName()),
-                () -> assertEquals(getProfileDto().getDateOfBirth(), profileDto.getDateOfBirth()),
-                () -> assertEquals(getProfileDto().getPassportNumber(), profileDto.getPassportNumber()),
-                () -> assertEquals(getProfileDto().getBirthPlace(), profileDto.getBirthPlace()),
-                () -> assertEquals(getProfileDto().getPhoneNumber(), profileDto.getPhoneNumber()),
-                () -> assertEquals(getProfileDto().getEmail(), profileDto.getEmail()),
-                () -> assertEquals(getProfileDto().getRegistrationAddress(), profileDto.getRegistrationAddress()),
-                () -> assertEquals(getProfileDto().getResidenceAddress(), profileDto.getResidenceAddress())
+                () -> assertNotNull(profileDtoRequest.getId()),
+                () -> assertEquals(getProfileDto().getBankId(), profileDtoRequest.getBankId()),
+                () -> assertEquals(getProfileDto().getLastName(), profileDtoRequest.getLastName()),
+                () -> assertEquals(getProfileDto().getFirstName(), profileDtoRequest.getFirstName()),
+                () -> assertEquals(getProfileDto().getMiddleName(), profileDtoRequest.getMiddleName()),
+                () -> assertEquals(getProfileDto().getDateOfBirth(), profileDtoRequest.getDateOfBirth()),
+                () -> assertEquals(getProfileDto().getPassportNumber(), profileDtoRequest.getPassportNumber()),
+                () -> assertEquals(getProfileDto().getBirthPlace(), profileDtoRequest.getBirthPlace()),
+                () -> assertEquals(getProfileDto().getPhoneNumber(), profileDtoRequest.getPhoneNumber()),
+                () -> assertEquals(getProfileDto().getEmail(), profileDtoRequest.getEmail()),
+                () -> assertEquals(getProfileDto().getRegistrationAddress(), profileDtoRequest.getRegistrationAddress()),
+                () -> assertEquals(getProfileDto().getResidenceAddress(), profileDtoRequest.getResidenceAddress())
         );
 
     }
@@ -133,12 +133,12 @@ public class ProfileControllerTest {
 
     @Test
     void createProfileFailValidMobileExceptionTest() throws Exception {
-        ProfileDto profileDto = getProfileDto();
-        profileDto.setPhoneNumber(null);
+        ProfileDtoRequest profileDtoRequest = getProfileDto();
+        profileDtoRequest.setPhoneNumber(null);
         mockMvc.perform(post("/profile/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("X-Source", "mobile")
-                        .content(objectMapper.writeValueAsString(profileDto)))
+                        .content(objectMapper.writeValueAsString(profileDtoRequest)))
                 .andExpect(status().isBadRequest())
                 .andDo(result -> assertEquals(IllegalArgumentException.class,
                         result.getResolvedException().getClass()));
@@ -146,14 +146,14 @@ public class ProfileControllerTest {
 
     @Test
     void createProfileFailValidMailExceptionTest() throws Exception {
-        ProfileDto profileDto = ProfileDto.builder()
+        ProfileDtoRequest profileDtoRequest = ProfileDtoRequest.builder()
                 .id(null)
                 .build();
 
         mockMvc.perform(post("/profile/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("X-Source", "mail")
-                        .content(objectMapper.writeValueAsString(profileDto)))
+                        .content(objectMapper.writeValueAsString(profileDtoRequest)))
                 .andExpect(status().isBadRequest())
                 .andDo(result -> assertEquals(IllegalArgumentException.class,
                         result.getResolvedException().getClass()));
@@ -161,14 +161,14 @@ public class ProfileControllerTest {
 
     @Test
     void createProfileFailValidBankExceptionTest() throws Exception {
-        ProfileDto profileDto = ProfileDto.builder()
+        ProfileDtoRequest profileDtoRequest = ProfileDtoRequest.builder()
                 .id(null)
                 .build();
 
         mockMvc.perform(post("/profile/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("X-Source", "bank")
-                        .content(objectMapper.writeValueAsString(profileDto)))
+                        .content(objectMapper.writeValueAsString(profileDtoRequest)))
                 .andExpect(status().isBadRequest())
                 .andDo(result -> assertEquals(IllegalArgumentException.class,
                         result.getResolvedException().getClass()));
@@ -176,14 +176,14 @@ public class ProfileControllerTest {
 
     @Test
     void createProfileFailValidGosUslugiExceptionTest() throws Exception {
-        ProfileDto profileDto = ProfileDto.builder()
+        ProfileDtoRequest profileDtoRequest = ProfileDtoRequest.builder()
                 .id(null)
                 .build();
 
         mockMvc.perform(post("/profile/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("X-Source", "gosuslugi")
-                        .content(objectMapper.writeValueAsString(profileDto)))
+                        .content(objectMapper.writeValueAsString(profileDtoRequest)))
                 .andExpect(status().isBadRequest())
                 .andDo(result -> assertEquals(IllegalArgumentException.class,
                         result.getResolvedException().getClass()));
@@ -191,14 +191,14 @@ public class ProfileControllerTest {
 
     @Test
     void createProfileFailValidHeaderExceptionTest() throws Exception {
-        ProfileDto profileDto = ProfileDto.builder()
+        ProfileDtoRequest profileDtoRequest = ProfileDtoRequest.builder()
                 .id(null)
                 .build();
 
         mockMvc.perform(post("/profile/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("X-Source", "test")
-                        .content(objectMapper.writeValueAsString(profileDto)))
+                        .content(objectMapper.writeValueAsString(profileDtoRequest)))
                 .andExpect(status().isBadRequest())
                 .andDo(result -> assertEquals(IllegalArgumentException.class,
                         result.getResolvedException().getClass()));
@@ -206,14 +206,14 @@ public class ProfileControllerTest {
 
     @Test
     void createProfileFailValidPhoneNumberExceptionTest() throws Exception {
-        ProfileDto profileDto = ProfileDto.builder()
+        ProfileDtoRequest profileDtoRequest = ProfileDtoRequest.builder()
                 .phoneNumber("123")
                 .build();
 
         mockMvc.perform(post("/profile/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("X-Source", "mobile")
-                        .content(objectMapper.writeValueAsString(profileDto)))
+                        .content(objectMapper.writeValueAsString(profileDtoRequest)))
                 .andExpect(status().isBadRequest())
                 .andDo(result -> assertEquals(MethodArgumentNotValidException.class,
                         result.getResolvedException().getClass()));
@@ -221,22 +221,22 @@ public class ProfileControllerTest {
 
     @Test
     void createProfileFailValidPassportNumberExceptionTest() throws Exception {
-        ProfileDto profileDto = ProfileDto.builder()
+        ProfileDtoRequest profileDtoRequest = ProfileDtoRequest.builder()
                 .passportNumber("123")
                 .build();
 
         mockMvc.perform(post("/profile/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("X-Source", "mobile")
-                        .content(objectMapper.writeValueAsString(profileDto)))
+                        .content(objectMapper.writeValueAsString(profileDtoRequest)))
                 .andExpect(status().isBadRequest())
                 .andDo(result -> assertEquals(MethodArgumentNotValidException.class,
                         result.getResolvedException().getClass()));
     }
 
 
-    private ProfileDto getProfileDto() {
-        return ProfileDto.builder()
+    private ProfileDtoRequest getProfileDto() {
+        return ProfileDtoRequest.builder()
                 .bankId(UUID.fromString("3fa85f64-5717-4562-b3fc-2c963f66afa6"))
                 .lastName("Иванов")
                 .firstName("Иван")

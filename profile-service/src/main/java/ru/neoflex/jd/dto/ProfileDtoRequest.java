@@ -11,7 +11,7 @@ import java.util.UUID;
 @Data
 @Builder
 @Schema(description = "Данные для создания профиля")
-public class ProfileDto {
+public class ProfileDtoRequest {
     @Schema(description = "Уникальный идентификатор пользователя", defaultValue = "3fa85f64-5717-4562-b3fc-2c963f66afa6")
     private UUID id;
     @Schema(description = "Идентификатор банка.", defaultValue = "3fa85f64-5717-4562-b3fc-2c963f66afa6")

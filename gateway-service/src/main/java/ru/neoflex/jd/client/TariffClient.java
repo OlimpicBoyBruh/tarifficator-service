@@ -19,6 +19,6 @@ public interface TariffClient {
     TariffDto deleteTariff(@PathVariable("tariffId") String tariffId, @RequestHeader("Authorization") String token);
 
     @PutMapping("${integration.service.tariff.method.update}")
-    void updateTariff(@PathVariable("tariffId") String tariffId, @RequestBody @Valid TariffDto tariffDto,
+    void updateTariff(@RequestBody @Valid TariffDto tariffDto,
                       @RequestHeader("Authorization") String token);
 }

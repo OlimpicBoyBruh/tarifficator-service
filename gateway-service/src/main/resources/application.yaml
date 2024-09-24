@@ -14,7 +14,7 @@ integration:
       method:
         create: /tariff/create
         delete: /tariff/delete/{tariffId}
-        update: /tariff/update/{tariffId}
+        update: /tariff/update
 
     product:
       base-url: http://localhost:8195

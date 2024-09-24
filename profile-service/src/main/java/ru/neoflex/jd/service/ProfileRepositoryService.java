@@ -8,7 +8,8 @@ import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
-import ru.neoflex.jd.dto.ProfileDto;
+import ru.neoflex.jd.dto.ProfileDtoRequest;
+import ru.neoflex.jd.dto.ProfileDtoResponse;
 import ru.neoflex.jd.dto.UserInfoDto;
 import ru.neoflex.jd.entity.Profile;
 import ru.neoflex.jd.mapping.ProfileMapper;
@@ -27,32 +28,32 @@ public class ProfileRepositoryService {
     private final ValidateProfileDto validateProfileDto;
     private final PasswordEncoder passwordEncoder;
 
-    public Profile createProfile(ProfileDto profileDto, String application) {
-        if (profileDto.getId() != null) {
-            profileDto.setId(UUID.randomUUID());
+    public Profile createProfile(ProfileDtoRequest profileDtoRequest, String application) {
+        if (profileDtoRequest.getId() == null) {
+            profileDtoRequest.setId(UUID.randomUUID());
         }
-        profileDto.setPassword(passwordEncoder.encode(profileDto.getPassword()));
-        validateProfileDto.validate(profileDto, application);
+        profileDtoRequest.setPassword(passwordEncoder.encode(profileDtoRequest.getPassword()));
+        validateProfileDto.validate(profileDtoRequest, application);
         log.info("Invoke ProfileRepositoryService, method createProfile, profileDto {}, application: {}",
-                profileDto, application);
+                profileDtoRequest, application);
 
-        Profile profile = profileRepository.save(profileMapper.toEntity(profileDto));
+        Profile profile = profileRepository.save(profileMapper.toEntity(profileDtoRequest));
 
         log.info("Profile successfully created.");
         return profile;
     }
 
-    public ProfileDto getProfileById(UUID id) {
+    public ProfileDtoResponse getProfileById(UUID id) {
         log.info("Invoke ProfileRepositoryService, method getProfileById, id: {}", id);
-        ProfileDto profileDto = profileMapper.toDto(profileRepository.findById(id).orElseThrow());
+        ProfileDtoResponse profileDtoResponse = profileMapper.toDto(profileRepository.findById(id).orElseThrow());
         log.info("Profile successfully found.");
-        return profileDto;
+        return profileDtoResponse;
     }
 
-    public List<ProfileDto> searchProfile(ProfileDto profileDto) {
-        log.info("Invoke ProfileRepositoryService, method searchProfile, profileDto: {}", profileDto);
-        List<ProfileDto> profiles = profileRepository.findAll(Example.of(profileMapper.toEntity(profileDto),
-                ExampleMatcher.matching().withIgnoreNullValues())).stream().map(profileMapper::toDto).toList();
+    public List<ProfileDtoRequest> searchProfile(ProfileDtoRequest profileDtoRequest) {
+        log.info("Invoke ProfileRepositoryService, method searchProfile, profileDto: {}", profileDtoRequest);
+        List<ProfileDtoRequest> profiles = profileRepository.findAll(Example.of(profileMapper.toEntity(profileDtoRequest),
+                ExampleMatcher.matching().withIgnoreNullValues())).stream().map(profileMapper::toDtoRequest).toList();
         log.info("Profiles successfully found profiles: {}", profiles);
         return profiles;
     }
@@ -65,7 +66,7 @@ public class ProfileRepositoryService {
             throw new EntityNotFoundException();
         }
 
-        UserInfoDto userInfoDto = new UserInfoDto(profile.getUsername(), profile.getPassword());
+        UserInfoDto userInfoDto = new UserInfoDto(profile.getUsername(), profile.getPassword().getPassword());
         log.info("User successfully found {}", userInfoDto);
         return userInfoDto;
     }

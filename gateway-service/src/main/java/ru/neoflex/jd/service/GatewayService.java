@@ -60,9 +60,9 @@ public class GatewayService {
 
     }
 
-    public void updateTariff(String tariffId, TariffDto tariffDto, String token) {
-        log.info("Update Tariff: {}", tariffId);
-        tariffClient.updateTariff(tariffId, tariffDto, token);
+    public void updateTariff(TariffDto tariffDto, String token) {
+        log.info("Update Tariff: {}", tariffDto.getId());
+        tariffClient.updateTariff(tariffDto, token);
         log.info("Tariff updated");
     }
 

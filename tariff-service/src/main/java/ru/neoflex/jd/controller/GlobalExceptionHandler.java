@@ -44,6 +44,7 @@ public class GlobalExceptionHandler {
         for (FieldError fieldError : fieldErrors) {
             errorMessage.append(fieldError.getDefaultMessage()).append(".");
         }
+        log.error("Exception handleValidationHandler: {}", errorMessage);
         return ResponseEntity
                 .status(exception.getStatusCode())
                 .body(new ErrorMessage(errorMessage.toString()));

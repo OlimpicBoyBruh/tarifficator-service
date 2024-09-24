@@ -19,6 +19,7 @@ spring:
       ddl-auto: validate
       default_schema: "${app.schema}"
   liquibase:
+    enabled: true
     default-schema: "${app.schema}"
     change-log: db/changelog/changelog-master.xml
 

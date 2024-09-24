@@ -28,7 +28,6 @@ public class ValidateProfileDto {
     private void compareVariableName(String variableName, ProfileDtoRequest profileDtoRequest) {
         try {
             Field field = profileDtoRequest.getClass().getDeclaredField(variableName);
-            field.setAccessible(true);
             if (field.get(profileDtoRequest) == null) {
                 throw new IllegalArgumentException("Validation failed: " + variableName);
 

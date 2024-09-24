@@ -33,6 +33,7 @@ public interface ProfileControllerSwagger {
             description = "Происходит поиск аккаунта по полям [фамилия, имя, отчество, телефон, email]"
     )
     List<ProfileDtoRequest> searchProfile(@ModelAttribute ProfileDtoRequest profileDtoRequest);
+
     @Operation(summary = "Поиск аккаунта по username.",
             description = "Используется для поиска аккаунта по username."
     )

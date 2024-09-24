@@ -15,6 +15,7 @@ import ru.neoflex.jd.dto.ProductDto;
 import ru.neoflex.jd.dto.TariffDto;
 import java.time.LocalDate;
 import java.util.List;
+
 @RequestMapping("/tarifficator")
 public interface GatewayController {
     @GetMapping("/product/actual/{productId}")
@@ -43,7 +44,7 @@ public interface GatewayController {
                            @Parameter(hidden = true) @RequestHeader("Authorization") String token);
 
     @PutMapping("/tariff/update/")
-    void updateTariff( @RequestBody TariffDto tariffDto,
+    void updateTariff(@RequestBody TariffDto tariffDto,
                       @Parameter(hidden = true) @RequestHeader("Authorization") String token);
 
     @GetMapping("/product/previous-version")

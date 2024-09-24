@@ -37,6 +37,7 @@ public class ProductController implements ProductControllerSwagger {
         productRepositoryService.createProduct(productDto, token);
         log.info("Product created");
     }
+
     @DeleteMapping("/delete/{productId}")
     public ProductDto deleteProduct(@PathVariable("productId") String productId,
                                     @RequestHeader("Authorization") String token) {

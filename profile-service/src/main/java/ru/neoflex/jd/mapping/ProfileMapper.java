@@ -9,8 +9,10 @@ import ru.neoflex.jd.entity.Profile;
 @Mapper(componentModel = "spring")
 public interface ProfileMapper {
     ProfileDtoResponse toDto(Profile account);
-    @Mapping(target ="password", source = "password.password" )
+
+    @Mapping(target = "password", source = "password.password")
     ProfileDtoRequest toDtoRequest(Profile account);
-    @Mapping(target ="password.password", source = "password" )
+
+    @Mapping(target = "password.password", source = "password")
     Profile toEntity(ProfileDtoRequest profileDtoRequest);
 }
